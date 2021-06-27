@@ -281,7 +281,7 @@ booky.put("/book/update/author/:isbn/:authorId", (req,res) =>{
     //updating book database
     database.books.forEach((book) =>{
 
-        if(book.ISBN===req.body.isbn)
+        if(book.ISBN===req.params.isbn)
         {
             return book.author.push(parseInt(req.params.authorId));
         }
@@ -290,7 +290,7 @@ booky.put("/book/update/author/:isbn/:authorId", (req,res) =>{
     //updating author database
     database.author.forEach((author) =>{
 
-        if(author.id===parseInt(req.body.authorId))
+        if(author.id===parseInt(req.params.authorId))
         {
             return author.books.push(req.params.isbn);
         }
@@ -299,6 +299,53 @@ booky.put("/book/update/author/:isbn/:authorId", (req,res) =>{
     return res.json({books:database.books, author:database.author});
 
 });
+
+//API
+/*
+Route            /author/update/name
+Description      Update author name
+Access           PUBLIC
+Parameter        id
+Methods          PUT
+ */
+
+booky.put("/author/update/name/:id", (req,res) =>{
+
+    database.author.forEach((author) =>{
+        if(author.id===parseInt(req.params.id))
+        {
+            author.name = req.body.newAuthorName;
+            return;
+        }
+    });
+
+    return res.json({authors:database.author});
+
+});
+
+//API
+/*
+Route            /publication/update/name
+Description      Update the publication's name
+Access           PUBLIC
+Parameter        id
+Methods          PUT
+ */
+
+booky.put("/publication/update/name/:id", (req,res) =>{
+
+    database.publication.forEach((publication) =>{
+        if(publication.id===parseInt(req.params.id))
+        {
+            publication.name = req.body.newPublicationName;
+            return;
+        }
+    });
+
+    return res.json({publications:database.publication});
+
+});
+
 
 booky.listen(3000, () => console.log("Hey, server is running!👏"));
 
