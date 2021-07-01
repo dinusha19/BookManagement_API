@@ -20,7 +20,7 @@
 //to get all books
 //to get specific books
 //to get list of books based on category
-//to get list of books based on languages
+//to get list of books based on languages(task)
 
 //POST
 //Add new Book
@@ -38,7 +38,7 @@
 //authors
 //we need API
 //to get all authors
-//to get specific author
+//to get specific author(task)
 //to get list of authors based on books
 
 //POST
@@ -53,9 +53,9 @@
 //GET
 //publications
 //we need API
-//to get all publications
-//to get specific publication
-//to get list of publication based on books
+//to get all publications(task)
+//to get specific publication(task)
+//to get list of publication based on books(task)
 
 //POST
 //Add new publication
