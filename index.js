@@ -97,10 +97,10 @@ Access           PUBLIC
 Parameter        language
 Methods          GET
  */
-booky.get("/l/:language", (req,res) =>{
-    const getSpecificBook = database.books.filter((book) => book.language===req.params.language);
+booky.get("/l/:language", async (req,res) =>{
+    const getSpecificBook = await BookModel.findOne({language:req.params.language});
 
-    if(getSpecificBook.length===0)
+    if(!getSpecificBook)
     {
         return res.json({error:`No book found for the language of ${req.params.language}`});
     }
@@ -152,11 +152,10 @@ Access           PUBLIC
 Parameter        isbn
 Methods          GET
  */
-booky.get("/author/book/:isbn", (req,res) => {
-    const getSpecificAuthor = database.author.filter((author) =>
-    author.books.includes(req.params.isbn));
+booky.get("/author/book/:isbn", async (req,res) => {
+    const getSpecificAuthor = await AuthorModel.findOne({books:req.params.isbn});
 
-    if(getSpecificAuthor.length===0)
+    if(!getSpecificAuthor)
     {
         return res.json({error:`No author found for the book of ${req.params.isbn}`});
     }
@@ -173,8 +172,10 @@ Parameter        NONE
 Methods          GET
  */
 
-booky.get("/publications", (req,res) => {
-    return res.json({publications:database.publication});
+booky.get("/publications", async (req,res) => {
+
+    const getAllPublication = await PublicationModel.find();
+    return res.json({publications:getAllPublication});
 });
 
 //API
@@ -206,11 +207,10 @@ Parameter        isbn
 Methods          GET
  */
 
-booky.get("/publications/books/:isbn", (req,res) => {
-    const getSpecificPublications = database.publication.filter((publication) =>
-    publication.books.includes(req.params.isbn));
+booky.get("/publications/books/:isbn", async (req,res) => {
+    const getSpecificPublications = await PublicationModel.findOne({books:req.params.isbn});
 
-    if(getSpecificPublications.length===0)
+    if(!getSpecificPublications)
     {
         return res.json({error:`No publications found based on ${req.params.isbn}`});
     }
@@ -281,17 +281,15 @@ Parameter        isbn
 Methods          PUT
  */
 
-booky.put("/book/update/title/:isbn", (req,res) =>{
+booky.put("/book/update/title/:isbn", async (req,res) =>{
 
-    database.books.forEach((book) =>{
-        if(book.ISBN===req.params.isbn)
-        {
-            book.title = req.body.newBookTitle;
-            return;
-        }
-    });
+    const updateBook = await BookModel.findOneAndUpdate(
+        {ISBN:req.params.isbn},
+        {title:req.body.newBookTitle},
+        {new:true}  //to get updated data
+        );
 
-    return res.json({books:database.books});
+    return res.json({book:updateBook});
 
 });
 
