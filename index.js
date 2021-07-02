@@ -302,27 +302,33 @@ Parameter        isbn
 Methods          PUT
  */
 
-booky.put("/book/update/author/:isbn/:authorId", (req,res) =>{
+booky.put("/book/update/author/:isbn",async (req,res) =>{
 
     //updating book database
-    database.books.forEach((book) =>{
-
-        if(book.ISBN===req.params.isbn)
+    const updateBook = await BookModel.findOneAndUpdate(
+        {ISBN:req.params.isbn},
         {
-            return book.author.push(parseInt(req.params.authorId));
-        }
-    });
+            $addToSet:{
+            author:req.body.newAuthor
+            }
+        },
+        {new:true}
+        );
 
     //updating author database
-    database.author.forEach((author) =>{
-
-        if(author.id===parseInt(req.params.authorId))
+    const updateAuthor = await AuthorModel.findOneAndUpdate(
+        {id:req.body.newAuthor},
         {
-            return author.books.push(req.params.isbn);
-        }
-    });
+            $addToSet:{
+            books : req.params.isbn
+                  }
+        },
+    {
+        new:true
+    }
+    );
 
-    return res.json({books:database.books, author:database.author});
+    return res.json({books:updateBook, author:updateAuthor});
 
 });
 
