@@ -17,8 +17,15 @@ Methods          GET
 
 Router.get("/", async (req, res) => {
 
-    const getAllBooks = await BookModel.find();
-    return res.json({ books: getAllBooks });
+    try{
+        const getAllBooks = await BookModel.find();
+        return res.json({ books: getAllBooks });
+
+    }
+    catch(error)
+   {
+        return res.json({error:error.message});
+    }
 });
 
 //API
@@ -31,7 +38,8 @@ Methods          GET
  */
 Router.get("/is/:isbn", async (req, res) => {
 
-    const getSpecificBook = await BookModel.findOne({ ISBN: req.params.isbn });
+    try{
+        const getSpecificBook = await BookModel.findOne({ ISBN: req.params.isbn });
     //It will return NULL -> False
 
     if (!getSpecificBook) {
@@ -39,6 +47,14 @@ Router.get("/is/:isbn", async (req, res) => {
     }
 
     return res.json({ book: getSpecificBook });
+
+    }
+    catch(error)
+    {
+        return res.json({error:error.message});
+
+    }
+
 });
 
 //API
@@ -51,13 +67,20 @@ Methods          GET
  */
 Router.get("/c/:category", async (req, res) => {
 
-    const getSpecificBook = await BookModel.findOne({ category: req.params.category })
+    try{
+        const getSpecificBook = await BookModel.findOne({ category: req.params.category })
 
     if (!getSpecificBook) {
         return res.json({ error: `No book found for the category of ${req.params.category}` });
     }
 
     return res.json({ book: getSpecificBook });
+
+    }
+    catch(error)
+    {
+       return res.json({error:error.message}); 
+    }
 });
 
 
@@ -70,13 +93,22 @@ Parameter        language
 Methods          GET
  */
 Router.get("/l/:language", async (req, res) => {
-    const getSpecificBook = await BookModel.findOne({ language: req.params.language });
 
-    if (!getSpecificBook) {
-        return res.json({ error: `No book found for the language of ${req.params.language}` });
+    try{
+        const getSpecificBook = await BookModel.findOne({ language: req.params.language });
+
+        if (!getSpecificBook) {
+            return res.json({ error: `No book found for the language of ${req.params.language}` });
+        }
+    
+        return res.json({ book: getSpecificBook });
+
     }
-
-    return res.json({ book: getSpecificBook });
+    catch(error)
+    {
+        return res.json({error:error.message}); 
+    }
+   
 });
 
 //API
@@ -117,13 +149,20 @@ Methods          PUT
 
 Router.put("/update/title/:isbn", async (req, res) => {
 
-    const updateBook = await BookModel.findOneAndUpdate(
-        { ISBN: req.params.isbn },
-        { title: req.body.newBookTitle },
-        { new: true }  //to get updated data
-    );
+    try{
+        const updateBook = await BookModel.findOneAndUpdate(
+            { ISBN: req.params.isbn },
+            { title: req.body.newBookTitle },
+            { new: true }  //to get updated data
+        );
+    
+        return res.json({ book: updateBook });
 
-    return res.json({ book: updateBook });
+    }
+    catch(error)
+    {
+        return res.json({error:error.message});
+    }
 
 });
 
@@ -138,8 +177,9 @@ Methods          PUT
  */
 
 Router.put("/update/author/:isbn", async (req, res) => {
+    try{
 
-    //updating book database
+        //updating book database
     const updateBook = await BookModel.findOneAndUpdate(
         { ISBN: req.params.isbn },
         {
@@ -165,6 +205,12 @@ Router.put("/update/author/:isbn", async (req, res) => {
 
     return res.json({ books: updateBook, author: updateAuthor });
 
+    }
+    catch(error)
+    {
+        return res.json({error:error.message});
+    }
+
 });
 
 //API
@@ -178,8 +224,15 @@ Methods          DELETE
 
 Router.delete("/delete/:isbn", async (req, res) => {
 
-    const updatedBookDatabase = await BookModel.findOneAndDelete({ ISBN: req.params.isbn });
-    return res.json({ books: database.books });
+    try{
+        const updatedBookDatabase = await BookModel.findOneAndDelete({ ISBN: req.params.isbn });
+        return res.json({ books: database.books });
+
+    }
+    catch(error){
+
+    return res.json({error:error.message});
+    }
 });
 
 //API
@@ -192,7 +245,10 @@ Methods          DELETE
  */
 
 Router.delete("/delete/author/:isbn/:authorId", async (req, res) => {
-    //update the book database
+
+    try{
+
+        //update the book database
     const updatedBook = await BookModel.findOneAndUpdate(
         { ISBN: req.params.isbn },
         {
@@ -222,6 +278,12 @@ Router.delete("/delete/author/:isbn/:authorId", async (req, res) => {
         author: updatedAuthor
     });
 
+
+    }
+    catch(error){
+
+    return res.json({error:error.message});
+    }
 });
 
 
