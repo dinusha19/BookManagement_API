@@ -28,7 +28,7 @@ mongoose.connect(
     }
 ).then(() => console.log("Connection established"));
 
-//Intializing Micro Services
+//Intializing Micro Services and setting prefix for MicroService
 booky.use("/book",Books);
 booky.use("/author",Authors);
 booky.use("/publication",Publications);
