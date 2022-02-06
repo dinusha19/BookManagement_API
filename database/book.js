@@ -4,12 +4,14 @@ const mongoose = require("mongoose");
 const BookSchema = mongoose.Schema({
     
     ISBN:{
+        //Validation for ISBN
         type:String,
         required:true,
         minLength:8,
         maxLength:10
     },
     title:{
+        //Validation for title
         type:String,
         required:true,
         minLength:8,
